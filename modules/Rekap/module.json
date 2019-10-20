@@ -1,0 +1,13 @@
+{
+    "name": "Rekap",
+    "alias": "rekap",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Module\\Rekap\\Providers\\RekapServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

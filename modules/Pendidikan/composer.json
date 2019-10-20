@@ -1,0 +1,25 @@
+{
+    "name": "reyaz/pendidikan",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reynaldi Aznan",
+            "email": "reynaldiaznan450@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Module\\Pendidikan\\Providers\\PendidikanServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Module\\Pendidikan\\": ""
+        }
+    }
+}

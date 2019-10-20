@@ -1,0 +1,13 @@
+{
+    "name": "Pendidikan",
+    "alias": "pendidikan",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Module\\Pendidikan\\Providers\\PendidikanServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

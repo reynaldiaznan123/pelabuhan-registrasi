@@ -1,0 +1,13 @@
+{
+    "name": "Serikat",
+    "alias": "serikat",
+    "description": "",
+    "keywords": [],
+    "order": 0,
+    "providers": [
+        "Module\\Serikat\\Providers\\SerikatServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

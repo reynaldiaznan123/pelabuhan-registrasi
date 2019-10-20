@@ -1,0 +1,25 @@
+{
+    "name": "reyaz/serikat",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reynaldi Aznan",
+            "email": "reynaldiaznan450@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Module\\Serikat\\Providers\\SerikatServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Module\\Serikat\\": ""
+        }
+    }
+}

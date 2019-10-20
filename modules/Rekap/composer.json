@@ -1,0 +1,25 @@
+{
+    "name": "reyaz/rekap",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reynaldi Aznan",
+            "email": "reynaldiaznan450@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Module\\Rekap\\Providers\\RekapServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Module\\Rekap\\": ""
+        }
+    }
+}

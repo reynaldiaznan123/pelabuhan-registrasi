@@ -1,0 +1,25 @@
+{
+    "name": "reyaz/employe",
+    "description": "",
+    "authors": [
+        {
+            "name": "Reynaldi Aznan",
+            "email": "reynaldiaznan450@gmail.com"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Module\\Employe\\Providers\\EmployeServiceProvider"
+            ],
+            "aliases": {
+                
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Module\\Employe\\": ""
+        }
+    }
+}
