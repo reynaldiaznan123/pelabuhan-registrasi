@@ -21,7 +21,7 @@
                     <li class="c-list-item">Pengaturan</li>
                 </ul>
             </li> --}}
-            <li class="c-list-item" data-url="{{ route('home') }}">
+            <li class="c-list-item" data-url="{{ route('dashboard') }}">
                 <div class="c-list-item__icon">
                     <i class="c-icon material-icons">
                         home
@@ -37,7 +37,7 @@
                 </div>
                 <div class="c-list-item__title">Anggota</div>
             </li>
-            <li class="c-list-item" data-url="{{ route('employe::index') }}">
+            <li class="c-list-item" data-url="{{ route('employe::tkbm') }}">
                 <div class="c-list-item__icon">
                     <i class="c-icon material-icons">
                         people
@@ -69,6 +69,7 @@
                 </div>
                 <div class="c-list-item__title">Verifikasi</div>
             </li> --}}
+            @if(auth()->user()->perm === 1)
             <li class="c-list-item" data-url="{{ route('pendidikan::index') }}">
                 <div class="c-list-item__icon">
                     <i class="c-icon material-icons">
@@ -134,6 +135,7 @@
                 </div>
                 <div class="c-list-item__title">Pengaturan</div>
             </li>
+            @endif
         </ul>
     </div>
     <div class="app-side-drawer--footer d-flex justify-content-center py-4">

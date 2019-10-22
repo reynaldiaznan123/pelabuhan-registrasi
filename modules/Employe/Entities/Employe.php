@@ -32,8 +32,19 @@ class Employe extends Model
         'photo',
         'noreg',
         'verifikasi',
-        'serikat_id'
+        'serikat_id',
+        'tgl_pembuatan',
+        'user_id'
     ];
+
+    protected $hidden = [
+        'serikat_id',
+        'user_id'
+    ];
+
+    // public function setTglPembuatanAttribute($value) {
+    //     $this->attributes['tgl_pembuatan'] = date('Y-m-d');
+    // }
 
     // protected $hidden = ['serikat_id'];
 
@@ -42,7 +53,7 @@ class Employe extends Model
     }
 
     public function scanning() {
-        return $this->hasMany(EmployeScanning::class);
+        return $this->hasOne(EmployeScanning::class);
     }
 
     public function serikat() {

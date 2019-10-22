@@ -29,11 +29,11 @@
 @endsection
 
 @push('library-styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.min.css" integrity="sha256-2bAj1LMT7CXUYUwuEnqqooPb1W0Sw0uKMsqNH0HwMa4=" crossorigin="anonymous">
+<link rel="stylesheet" href="{{ asset('vendors/sweetalert/sweetalert.min.css') }}" crossorigin="anonymous">
 @endpush
 
 @push('library-scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/8.11.8/sweetalert2.all.min.js" integrity="sha256-2RS1U6UNZdLS0Bc9z2vsvV4yLIbJNKxyA4mrx5uossk=" crossorigin="anonymous"></script>
+<script src="{{ asset('vendors/sweetalert/sweetalert.all.min.js') }}" crossorigin="anonymous"></script>
 @endpush
 
 @push('scripts')

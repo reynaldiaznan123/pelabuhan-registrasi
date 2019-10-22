@@ -272,10 +272,14 @@
                 <div class="frame-preview-content d-sm-flex justify-content-beteen my-4">
                     {{-- <video src="" id="photo-preview" playsinline autoplay></video> --}}
                     <div id="my_camera"></div>
-                    <img @if($row->photo) src="{{ storage_path($row->photo) }}" @endif alt="" id="photo-result">
+                    <img @if($row->photo) src="{{ asset('storage' . str_replace('public', '', $row->photo)) }}" @endif alt="" id="photo-result">
+                </div>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" name="photo-default" id="photo-default">
+                    <label class="custom-file-label" for="photo-default">Choose file...</label>
                 </div>
                 <input type="hidden" type="hidden" id="photo-output" name="photo">
-                <button type="button" id="got-result" class="btn btn-primary">Ambil Foto!</button>
+                {{-- <button type="button" id="got-result" class="btn btn-primary">Ambil Foto!</button> --}}
             </div>
 
             {{-- <select size="1" id="source" style="position: relative; width: 220px;"></select>
@@ -363,28 +367,29 @@
 @endsection
 
 @push('library-styles')
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/css/select2.min.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/css/tempusdominus-bootstrap-4.min.css">
+<link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendors/select2/dist/css/select2-bootstrap.min.css') }}">
+<link rel="stylesheet" href="{{ asset('vendors/datetimepicker/datetimepicker.min.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.css" integrity="sha256-e47xOkXs1JXFbjjpoRr1/LhVcqSzRmGmPqsrUQeVs+g=" crossorigin="anonymous">
 @endpush
 
 @push('library-scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js" integrity="sha256-AdQN98MVZs44Eq2yTwtoKufhnU+uZ7v2kXnD5vqzZVo=" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.10/js/select2.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/jquery.validate.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.1/additional-methods.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.0-alpha14/js/tempusdominus-bootstrap-4.min.js"></script>
+<script src="{{ asset('vendors/moment-with-locales.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ asset('vendors/select2/dist/js/select2.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ asset('vendors/file-input.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ asset('vendors/validation/validate.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ asset('vendors/validation/methods.min.js') }}" crossorigin="anonymous"></script>
+<script src="{{ asset('vendors/datetimepicker/datetimepicker.min.js') }}" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.1/min/dropzone.min.js" integrity="sha256-cs4thShDfjkqFGk5s2Lxj35sgSRr4MRcyccmi0WKqCM=" crossorigin="anonymous"></script>
 {{-- <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script> --}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js" integrity="sha256-t+nJEiBiQ6CP53aJk5ptfJ+gno5gl3N0RKYycDqZ5ko=" crossorigin="anonymous"></script>
+<script src="{{ asset('js/webcam.js') }}" crossorigin="anonymous"></script>
 {{-- <script src="https://cdn.jsdelivr.net/npm/dwt@15.2.0/dist/dynamsoft.webtwain.initiate.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dwt@15.2.0/dist/dynamsoft.webtwain.config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dwt@15.2.0/dist/dynamsoft.webtwain.min.js"></script> --}}
 @endpush
 @push('scripts')
 <script>
+$('#photo-upload').slideUp();
 bsCustomFileInput.init();
 const startTime = moment();
 const endTime = moment('{{ $row->tgllahir }}');
@@ -503,7 +508,18 @@ function start() {
 				frameRate: 30
             }
         });
-        Webcam.attach('#my_camera');
+        if (!!!navigator.mediaDevices) {
+            // $('#photo-upload').slideDown();
+            // $('#got-result').slideUp();
+            // $('label[for="list-devices"]').slideUp();
+            // $(devices).slideUp();
+        }
+        Webcam.on('load', function() {
+            Webcam.attach('#my_camera');
+        });
+        Webcam.on('error', function(err) {
+            console.log(err);
+        });
 
         document.getElementById('got-result').addEventListener('click', take_snapshot);
         devices.addEventListener('change', start);

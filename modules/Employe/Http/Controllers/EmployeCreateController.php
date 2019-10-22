@@ -53,7 +53,11 @@ class EmployeCreateController extends Controller
         } else if ($request->form_step === '2') {
             $form_steps = $this->updateFormSteps(true);
             $form_steps['form_step'] = 3;
-            $form_steps['photo'] = $request->photo;
+            if (empty($request->photo)) {
+                $form_steps['photo'] = $request->file('photo-default')->store('public/berkas');
+            } else {
+                $form_steps['photo'] = $request->photo;
+            }
             $this->updateFormSteps(false, $form_steps);
             return redirect(route('employe::create'));
         } else {
@@ -70,7 +74,6 @@ class EmployeCreateController extends Controller
             $form_steps['serikat_id'] = $form_steps['serikat'];
             $q1 = $form_steps['kursus'];
             $q2 = $form_steps['sertifikasi'];
-            $photo = base64_decode($form_steps['photo']);
             $form_steps['tgllahir'] = date('Y-m-d', strtotime($form_steps['tgllahir']));
             unset(
                 $form_steps['_token'],
@@ -80,16 +83,15 @@ class EmployeCreateController extends Controller
                 $form_steps['sertifikasi'],
                 $form_steps['serikat']
             );
-            // try {
-            //     Storage::disk('public')->delete('berkas/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '.jpeg');
-            // } catch (Exception $e) {}
-            // Storage::disk('public')->put('berkas/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '.jpeg', $photo);
-            $filename = $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu'] . '.jpeg';
-            if (!is_dir(storage_path('app/public/berkas'))) {
-                mkdir(storage_path('app/public/berkas'));
+            if (!file_exists(storage_path('app/' . $form_steps['photo']))) {
+                $photo = base64_decode($form_steps['photo']);
+                $filename = $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu'] . '.jpeg';
+                if (!is_dir(storage_path('app/public/berkas'))) {
+                    mkdir(storage_path('app/public/berkas'));
+                }
+                file_put_contents(storage_path('app/public/berkas/' . $filename), $photo);
+                $form_steps['photo'] = 'berkas/' . $filename;
             }
-            file_put_contents(storage_path('app/public/berkas/' . $filename), $photo);
-            $form_steps['photo'] = 'berkas/' . $filename;
 
             $data = [
                 'photo_ktp',
@@ -102,7 +104,7 @@ class EmployeCreateController extends Controller
             foreach ($data as $key) {
                 $file = $request->file($key);
                 if ($file) {
-                    $path = $file->store('berkas/' . $form_steps['nama'] . '-' . $form_steps['nokta']);
+                    $path = $file->store('berkas/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu']);
                     $files[$key] = $path;
                 }
             }
@@ -113,6 +115,8 @@ class EmployeCreateController extends Controller
                 $message = 'Data berhasil diubah.';
             } else {
                 $form_steps['noreg'] = $this->getNoRegistrasi();
+                $form_steps['tgl_pembuatan'] = date('Y-m-d');
+                $form_steps['user_id'] = auth()->user()->id;
                 $d = Employe::create($form_steps);
                 $message = 'Data berhasil ditambahkan.';
             }
@@ -142,14 +146,15 @@ class EmployeCreateController extends Controller
         if ($check) {
             $j = str_replace($prefix, '', $check->noreg);
             $n = (int) $j;
-            if (strlen($n) === 1) {
-                $code = $prefix . '000' . ($n + 1);
-            } else if (strlen($n) === 2) {
-                $code = $prefix . '00' . ($n + 1);
-            } else if (strlen($n) === 3) {
-                $code = $prefix . '0' . ($n + 1);
+            $ni = $n + 1;
+            if (strlen($ni) === 1) {
+                $code = $prefix . '000' . $ni;
+            } else if (strlen($ni) === 2) {
+                $code = $prefix . '00' . $ni;
+            } else if (strlen($ni) === 3) {
+                $code = $prefix . '0' . $ni;
             } else {
-                $code = $prefix . ($n + 1);
+                $code = $prefix . $ni;
             }
             // Generate angka baru
             $code = $code;

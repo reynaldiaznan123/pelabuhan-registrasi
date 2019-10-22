@@ -11,6 +11,6 @@
 |
 */
 
-Route::prefix('rekap')->group(function() {
+Route::prefix('rekap')->middleware(['auth'])->group(function() {
     Route::get('/', 'RekapController@index');
 });

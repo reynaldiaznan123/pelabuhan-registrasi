@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('pendidikan')->group(function() {
+Route::prefix('pendidikan')->middleware(['auth'])->group(function() {
     Route::get('/', 'PendidikanController@index')->name('pendidikan::index');
     Route::get('/create', 'PendidikanController@create')->name('pendidikan::create');
     Route::post('/store', 'PendidikanController@store')->name('pendidikan::store');

@@ -2,9 +2,11 @@
 
 namespace Module\Auth\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
+use Yajra\DataTables\Facades\DataTables;
 
 class AuthController extends Controller
 {
@@ -14,6 +16,19 @@ class AuthController extends Controller
      */
     public function index()
     {
+        $req = request();
+        if ($req->ajax()) {
+            return DataTables::of(User::all())
+                ->addColumn('action', function($row) {
+                    $btn = '';
+                    // Button Read
+                    $btn .= '<a href="'.route('authentication::show', ['id' => $row->id]).'" class="btn btn-sm btn-info">Read</a>&nbsp;';
+                    $btn .= '<a href="'.route('authentication::edit', ['id' => $row->id]).'" class="btn btn-sm btn-warning">Edit</a>&nbsp;';
+                    $btn .= '<a href="'.route('authentication::delete', ['id' => $row->id]).'" class="btn btn-sm btn-danger">Delete</a>';
+                    return $btn;
+                })
+                ->make(true);
+        }
         return view('auth::index');
     }
 
@@ -33,7 +48,17 @@ class AuthController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+
+        User::create([
+            'name' => $request->nama,
+            'username' => $request->username,
+            'password' => bcrypt($request->password),
+        ]);
+        return redirect(route('authentication::create'));
     }
 
     /**
@@ -53,7 +78,9 @@ class AuthController extends Controller
      */
     public function edit($id)
     {
-        return view('auth::edit');
+        return view('auth::edit', [
+            'row' => User::find($id)
+        ]);
     }
 
     /**
@@ -64,7 +91,16 @@ class AuthController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // $request->validate([]);
+        $data = [
+            'username' => $request->username,
+            'name' => $request->nama
+        ];
+        if (!empty($request->password)) {
+            $data['password'] = bcrypt($request->password);
+        }
+        User::find($id)->update($data);
+        return redirect(route('authentication::edit', ['id' => $id]));
     }
 
     /**

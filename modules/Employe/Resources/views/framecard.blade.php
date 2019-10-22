@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <div class="frame-card d-flex justify-content-center">
                     {{-- {{ $row->photo }} --}}
-                    <img src="{{ asset('storage/' . $row->photo) }}" class="frame-image" alt="">
+                    <img src="{{ asset('storage/' . str_replace('public', '', $row->photo)) }}" class="frame-image" alt="">
                     <img src="{{ asset('vectors/vector.jpg') }}" alt="">
                     <div class="frame-content">
                         <span>{{ $row->nama }}</span>
@@ -23,8 +23,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" id="frame-close" data-dismiss="modal">Close</button>
+                {{-- <button type="button" class="btn btn-primary">Save changes</button> --}}
             </div>
         </div>
     </div>
@@ -63,5 +63,8 @@
 @push('scripts')
 <script>
 $('#exampleModalCenter').modal('show');
+$('#frame-close').click(() => {
+    window.location.href = '{{ route('dashboard') }}';
+});
 </script>
 @endpush

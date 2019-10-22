@@ -31,17 +31,6 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label for="passconf" class="col-sm-3 col-form-label">Konfirmasi Kata Sandi<span class="text-required">*</span></label>
-                <div class="col-sm-9">
-                    <input type="text" class="form-control" id="passconf" name="passconf" placeholder="Konfirmasi kata sandi...">
-                    @error('passconf')
-                        <div class="invalid-data">
-                            <span>{{ $message }}</span>
-                        </div>
-                    @enderror
-                </div>
-            </div>
-            <div class="form-group row">
                 <label for="nama" class="col-sm-3 col-form-label">Nama<span class="text-required">*</span></label>
                 <div class="col-sm-9">
                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Nama...">

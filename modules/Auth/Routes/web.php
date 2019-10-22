@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('authentication')->group(function() {
+Route::prefix('authentication')->middleware(['auth'])->group(function() {
     Route::get('/', 'AuthController@index')->name('authentication::index');
     Route::get('/create', 'AuthController@create')->name('authentication::create');
     Route::post('/store', 'AuthController@store')->name('authentication::store');

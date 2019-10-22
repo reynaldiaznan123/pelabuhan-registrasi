@@ -11,7 +11,7 @@
 |
 */
 
-Route::prefix('serikat')->group(function() {
+Route::prefix('serikat')->middleware(['auth'])->group(function() {
     Route::get('/', 'SerikatController@index')->name('serikat::index');
     Route::get('/create', 'SerikatController@create')->name('serikat::create');
     Route::post('/store', 'SerikatController@store')->name('serikat::store');
