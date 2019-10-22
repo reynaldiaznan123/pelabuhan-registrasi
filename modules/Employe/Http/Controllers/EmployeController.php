@@ -150,7 +150,8 @@ class EmployeController extends Controller
             $request->session()->put('form_steps', Crypt::encryptString(json_encode($data)));
             return redirect(route('employe::edit', ['id' => $id]));
         } else if ($request->form_step === '2') {
-            if ($request->file('photo-default')) {
+            $data = Employe::find($id);
+            if (!file_exists(storage_path('app/' . $data->photo))) {
                 $request->validate([
                     'photo-default' => 'image'
                 ]);
@@ -167,13 +168,24 @@ class EmployeController extends Controller
             $this->updateFormSteps(false, $form_steps);
             return redirect(route('employe::edit', ['id' => $id]));
         } else {
-            $request->validate([
-                'photo_ktp' => 'required',
-                'photo_kk' => 'required',
-                'photo_kta' => 'required',
-                'ijazah' => 'image',
-                'sertifikat' => 'image',
-            ]);
+            $d = Employe::find($id);
+            $validate = [];
+            if (!file_exists(storage_path('app/' . $d->scanning->photo_ktp)))
+                $validate['photo_ktp'] = 'required|image';
+
+            if (!file_exists(storage_path('app/' . $d->scanning->photo_kta)))
+                $validate['photo_kta'] = 'required|image';
+            
+            if (!file_exists(storage_path('app/' . $d->scanning->photo_kk)))
+                $validate['photo_kk'] = 'required|image';
+            
+            if (!file_exists(storage_path('app/' . $d->scanning->ijazah)) || empty($d->scanning->ijazah))
+                $validate['ijazah'] = 'image';
+
+            if (!file_exists(storage_path('app/' . $d->scanning->sertifikat)) || empty($d->scanning->ijazah))
+                $validate['sertifikat'] = 'image';
+            
+            $request->validate($validate);
 
             $form_steps = $this->updateFormSteps(true);
             $form_steps['noregu'] = $form_steps['regu'];
@@ -191,14 +203,14 @@ class EmployeController extends Controller
                 $form_steps['sertifikasi'],
                 $form_steps['serikat']
             );
-            if (!file_exists(storage_path('app/' . $form_steps['photo']))) {
+            if (isset($form_steps['photo']) && !file_exists(storage_path('app/' . $form_steps['photo']))) {
                 $photo = base64_decode($form_steps['photo']);
                 $filename = $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu'] . '.jpeg';
                 if (!is_dir(storage_path('app/public/berkas'))) {
                     mkdir(storage_path('app/public/berkas'));
                 }
                 file_put_contents(storage_path('app/public/berkas/' . $filename), $photo);
-                $form_steps['photo'] = 'berkas/' . $filename;
+                $form_steps['photo'] = 'public/berkas/' . $filename;
             }
             $data = [
                 'photo_ktp',
@@ -211,11 +223,10 @@ class EmployeController extends Controller
             foreach ($data as $key) {
                 $file = $request->file($key);
                 if ($file) {
-                    $path = $file->store('berkas/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu']);
+                    $path = $file->store('public/scanning/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu']);
                     $files[$key] = $path;
                 }
             }
-            $d = Employe::find($id);
             if (empty($d->noreg)) {
                 $form_steps['noreg'] = $this->getNoRegistrasi();
                 $form_steps['tgl_pembuatan'] = date('Y-m-d');

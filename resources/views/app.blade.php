@@ -10,6 +10,36 @@
     @stack('library-styles')
     <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     @stack('styles')
+    <style>
+        .app-side-drawer--heading {
+            padding: 0 22px;
+            margin-top: 18px;
+        }
+        .sidebar-left {
+            width: 30%
+        }
+        .sidebar-left > .sidebar-img {
+            width: 100%;
+            border-radius: 100%;
+            padding: 2px;
+            border: 2px solid #f2f2f2;
+        }
+        .sidebar-right {
+            width: 70%;
+            padding: 8px 12px 0 12px;
+        }
+        .sidebar-right > .sidebar-name,
+        .sidebar-right > .sidebar-email,
+        .sidebar-right > .sidebar-status {
+            color: #f2f2f2;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .sidebar-right > .sidebar-email {
+            font-size: 13px;
+        }
+    </style>
 </head>
 <body>
     <div class="app">

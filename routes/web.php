@@ -1,6 +1,7 @@
 <?php
 
 use App\Imports\Employe;
+use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
 use Module\Employe\Entities\Employe as ModuleEmploye;
 
@@ -125,4 +126,103 @@ Route::get('test-data', function() {
     //     //     echo $a . '<br>';
     //     // }
     // }
+});
+
+Route::get('test-date', function() {
+    $d = ModuleEmploye::selectRaw("*, timestampdiff(year, tgllahir, DATE_FORMAT(NOW(),'%Y%m%d')) as age")
+        // ->groupBy('age')
+        ->having('age', 49)
+        ->having('tgl_pembuatan', 'like', '%2019-10-22%')
+        ->get();
+    $i = 1;
+
+    echo $d->count();
+    // foreach ($d->get() as $r) {
+    //     // var_dump($r);
+    //     if ($i === 1) {
+    //         var_dump($r->age);
+    //     }
+    //     echo $r['tgllahir'] . '<br>';
+    //     $i++;
+    // }
+});
+
+Route::get('test-mv-file', function() {
+    // $path = null;
+    // if (file_exists(storage_path('app/public/sulaika.png'))) {
+    //     $c = Storage::disk('public')->move('sulaika.png', 'berkas/asda.png');
+    //     echo $c;
+    //     if ($c && Storage::disk('public')->exists('berkas/asda.png')) {
+    //         $path = public/berkas/asda.png;
+    //     }
+    // }
+    // echo $path;
+    $d = ModuleEmploye::where('noreg', '!=', null)->get();
+    foreach ($d as $r) {
+        $file = $r->scanning;
+        $ktp = $file->photo_ktp;
+        $kta = $file->photo_kta;
+        $kk = $file->photo_kk;
+        $ijazah = $file->ijazah;
+        $sertifikat = $file->sertifikat;
+        $path = [];
+
+        if (file_exists(storage_path('app/' . $ktp)) && file_exists(storage_path('app/' . $kta)) && file_exists(storage_path('app/' . $kk))) {
+            $ktp_old = $ktp;
+            $ktp = explode('/', $ktp);
+            unset($ktp[0]);
+            $ktp = implode('/', $ktp);
+
+            Storage::disk('local')->copy($ktp_old, 'public/scanning/' . $ktp);
+            $path[0] = 'public/scanning/' . $ktp;
+
+            $kta_old = $kta;
+            $kta = explode('/', $kta);
+            unset($kta[0]);
+            $kta = implode('/', $kta);
+
+            Storage::disk('local')->copy($kta_old, 'public/scanning/' . $kta);
+            $path[1] = 'public/scanning/' . $kta;
+
+            $kk_old = $kk;
+            $kk = explode('/', $kk);
+            unset($kk[0]);
+            $kk = implode('/', $kk);
+
+            Storage::disk('local')->copy($kk_old, 'public/scanning/' . $kk);
+            $path[2] = 'public/scanning/' . $kk;
+        }
+
+        if (!empty($ijazah) && file_exists(storage_path('app/' . $ijazah))) {
+            $ijazah_old = $ijazah;
+            $ijazah = explode('/', $ijazah);
+            unset($ijazah[0]);
+            $ijazah = implode('/', $ijazah);
+
+            Storage::disk('local')->copy($ijazah_old, 'public/scanning/' . $ijazah);
+            $path[3] = 'public/scanning/' . $ijazah;
+        } else {
+            $path[3] = null;
+        }
+
+        if (!empty($sertifikat) && file_exists(storage_path('app/' . $sertifikat))) {
+            $sertifikat_old = $sertifikat;
+            $sertifikat = explode('/', $sertifikat);
+            unset($sertifikat[0]);
+            $sertifikat = implode('/', $sertifikat);
+
+            Storage::disk('local')->copy($sertifikat_old, 'public/scanning/' . $sertifikat);
+            $path[4] = 'public/scanning/' . $sertifikat;
+        } else {
+            $path[4] = null;
+        }
+
+        ModuleEmploye::find($r->id)->scanning()->update([
+            'photo_ktp' => $path[0],
+            'photo_kta' => $path[1],
+            'photo_kk' => $path[2],
+            'ijazah' => $path[3],
+            'sertifikat' => $path[4],
+        ]);
+    }
 });

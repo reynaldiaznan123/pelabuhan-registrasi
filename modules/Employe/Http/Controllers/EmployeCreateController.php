@@ -90,7 +90,7 @@ class EmployeCreateController extends Controller
                     mkdir(storage_path('app/public/berkas'));
                 }
                 file_put_contents(storage_path('app/public/berkas/' . $filename), $photo);
-                $form_steps['photo'] = 'berkas/' . $filename;
+                $form_steps['photo'] = 'public/berkas/' . $filename;
             }
 
             $data = [
@@ -104,7 +104,7 @@ class EmployeCreateController extends Controller
             foreach ($data as $key) {
                 $file = $request->file($key);
                 if ($file) {
-                    $path = $file->store('berkas/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu']);
+                    $path = $file->store('public/scanning/' . $form_steps['nama'] . '-' . $form_steps['nokta'] . '-' . $form_steps['noregu']);
                     $files[$key] = $path;
                 }
             }

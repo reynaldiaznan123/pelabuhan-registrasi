@@ -1,6 +1,13 @@
 <aside class="app-side-drawer" data-position="left">
-    <div class="app-side-drawer--heading">
+    <div class="app-side-drawer--heading d-flex justify-content-start">
         {{-- asda --}}
+        <div class="sidebar-left">
+            <img src="{{ asset('storage/berkas/1vvI28j2WFsrhj5j8gA04TOvNAcQROnsmm5AQwuc.png') }}" alt="" class="sidebar-img">
+        </div>
+        <div class="sidebar-right">
+            <div class="sidebar-name">Example Name</div>
+            {{-- <div class="sidebar-e"></div> --}}
+        </div>
     </div>
     <div class="app-side-drawer--content">
         <ul class="c-list">
